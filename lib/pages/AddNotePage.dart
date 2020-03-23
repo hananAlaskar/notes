@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:notes_app/model/Note.dart';
 import 'package:notes_app/model/database_helper.dart';
+import 'package:notes_app/pages/NotePage.dart';
 
 class AddNotePage extends StatefulWidget {
   AddNotePage({Key key}) : super(key: key);
@@ -123,7 +124,9 @@ class _AddNotePageState extends State<AddNotePage> {
 
   void _addNote() async {
 
-    await helper.insertNote(createNote());
+    Note note = createNote();
+    await helper.insertNote(note);
+    navigateToNote(note);
     clearAddNoteInput();
 
   }
@@ -142,7 +145,13 @@ class _AddNotePageState extends State<AddNotePage> {
 
 
 
+  void navigateToNote(Note note) async {
 
+    await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return NotePage(note);
+    }));
+
+  }
 
 
 }

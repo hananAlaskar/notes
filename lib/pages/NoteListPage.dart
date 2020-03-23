@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/pages/NotePage.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:notes_app/model/Note.dart';
 import 'package:notes_app/model/database_helper.dart';
@@ -38,19 +39,26 @@ class _NoteListPageState extends State<NoteListPage> {
     return GridView.count(
       crossAxisCount: 3,
       children: List.generate(gridViewCount, (index) {
-        return getNoteContainer(index);
+        return getNoteGestureDetector(index);
       }),
     );
   }
 
-  Container getNoteContainer(index) {
-    return new Container(
-      child: Card(
-          child: Container(
-        margin: EdgeInsets.all(4.0),
-        padding: EdgeInsets.all(4.0),
-        child: getNoteColumn(index),
-      )),
+  GestureDetector getNoteGestureDetector(index) {
+    return  GestureDetector(
+      onTap: () {navigateToNote(noteList[index]);
+    },
+      child: getNoteCard(index),
+    );
+  }
+
+  getNoteCard(index){
+    return  Card(
+        child: Container(
+          margin: EdgeInsets.all(4.0),
+          padding: EdgeInsets.all(4.0),
+          child: getNoteColumn(index),
+        )
     );
   }
 
@@ -134,4 +142,11 @@ class _NoteListPageState extends State<NoteListPage> {
     });
   }
 
+  void navigateToNote(Note note) async {
+
+    await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return NotePage(note);
+    }));
+
+  }
 }
