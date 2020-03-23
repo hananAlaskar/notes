@@ -64,7 +64,7 @@ class _NoteListPageState extends State<NoteListPage> {
     );
   }
 
-  getTitle(index) {
+  Flexible getTitle(index) {
     return Flexible(
         fit: FlexFit.tight,
         flex: 1,
@@ -81,7 +81,7 @@ class _NoteListPageState extends State<NoteListPage> {
             )));
   }
 
-  getNote(index) {
+  Flexible getNote(index) {
     return Flexible(
         fit: FlexFit.tight,
         flex: 1,

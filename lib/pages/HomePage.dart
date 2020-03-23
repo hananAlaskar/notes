@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/pages/AddNotePage.dart';
 import 'package:notes_app/pages/NoteListPage.dart';
 
 
@@ -34,29 +35,29 @@ class MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
     );
   }
 
-  getHomeAppBar() {
+  AppBar getHomeAppBar() {
     return AppBar(
       title: Text("My Note"),
       backgroundColor: _color,
     );
   }
 
-  getHomeTabBarView() {
+  TabBarView getHomeTabBarView() {
     return TabBarView(
       children: getHomeTabBarItems(),
       controller: _homeTabController,
     );
   }
 
-  getHomeTabBarItems() {
-    return <Widget>[NoteListPage(), Text("Add Note")];
+   getHomeTabBarItems() {
+    return <Widget>[NoteListPage(), AddNotePage()];
   }
 
-  getHomeBottomNavigationBar() {
+  Material getHomeBottomNavigationBar() {
     return Material(color: _color, child: getHomeTabBar());
   }
 
-  getHomeTabBar() {
+  TabBar getHomeTabBar() {
     return TabBar(
       tabs: <Tab>[
         Tab(
