@@ -58,6 +58,14 @@ class DatabaseHelper {
     return result;
   }
 
+
+  Future<List<Map<String, dynamic>>> getNoteMapListByCategoryNumber(int categoryNumber) async {
+    Database db = await this.database;
+
+    var result = await db.query(noteTable,where: '$colCategory = ?', whereArgs: [categoryNumber],orderBy: '$colDate DESC');
+    return result;
+  }
+
   Future<List<Map<String, dynamic>>> getNoteById(int noteId) async {
     Database db = await this.database;
 
@@ -102,9 +110,15 @@ class DatabaseHelper {
     return result;
   }
 
-  Future<List<Note>> getNoteList() async {
+  Future<List<Note>> getNoteList(int categoryNumber) async {
 
-    var noteMapList = await getNoteMapList();
+    var noteMapList;
+
+    if(categoryNumber != -1)
+      noteMapList = await getNoteMapListByCategoryNumber(categoryNumber);
+    else
+      noteMapList = await getNoteMapList();
+
     int count = noteMapList.length;
 
     List<Note> noteList = List<Note>();

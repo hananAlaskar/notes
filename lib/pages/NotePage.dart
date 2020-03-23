@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/model/Note.dart';
+import 'package:notes_app/model/NoteCategory.dart';
 
 class NotePage extends StatefulWidget {
   final Note note;
@@ -50,21 +51,11 @@ class _NotePageState extends State<NotePage> {
         alignment: Alignment.topRight,
         child: Row(children: [
           getNoteDateContainer(),
-         getCategoryIcon(note.category),
+         NoteCategory.getCategoryIcon(note.category),
         ]));
   }
 
-  getCategoryIcon (categoryNumber){
 
-    switch(categoryNumber){
-      case 1 : return Icon(Icons.work, color: Colors.lightBlue[400]);
-      case 2 : return Icon(Icons.home, color: Colors.lightBlue[400]);
-      case 3 : return Icon(Icons.airplanemode_active, color: Colors.lightBlue[400]);
-      case 4 : return Icon(Icons.child_care, color: Colors.lightBlue[400]);
-      case 0 : return Icon(Icons.archive, color: Colors.lightBlue[400]);
-    }
-
-  }
 
   Container getNoteDateContainer() {
     final Size screenSize = MediaQuery.of(context).size;

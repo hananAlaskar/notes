@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/model/NoteCategory.dart';
 import 'package:notes_app/pages/NotePage.dart';
 import 'package:notes_app/ui_utility/UiUtility.dart';
 import 'package:sqflite/sqflite.dart';
@@ -17,20 +18,90 @@ class _NoteListPageState extends State<NoteListPage> {
   List<Note> noteList;
   DatabaseHelper helper = DatabaseHelper();
 
+  List<NoteCategory> _noteCategories;
+  NoteCategory _selectedNoteCategory;
+
   @override
   void initState() {
     super.initState();
 
     if (noteList == null) {
       noteList = List<Note>();
-      updateListView();
+      updateListView(-1);
     }
+
+    _noteCategories = NoteCategory.noteCategories;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: getGridView()
+        body: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: <Widget>[
+          getCategoryRow(),
+          getGridViewFlexible(),
+        ],
+      ),
+    ));
+  }
+
+  getCategoryRow(){
+
+    return Row(
+      children: <Widget>[
+        getCategoryDropdownButton(),
+        getClearCategoryButton(),
+      ],
+    );
+  }
+
+  getCategoryDropdownButton() {
+    final Size screenSize = MediaQuery.of(context).size;
+
+    return Container(
+        alignment: Alignment.topCenter,
+        padding: EdgeInsets.all(6.0),
+        child: DropdownButton<NoteCategory>(
+          hint: Text("Select Category"),
+          value: _selectedNoteCategory,
+          onChanged: (NoteCategory noteCategory) {
+            updateListView(noteCategory.number);
+            setState(() {
+              _selectedNoteCategory = noteCategory;
+            });
+          },
+          items: _noteCategories.map((NoteCategory noteCategory) {
+            return DropdownMenuItem<NoteCategory>(
+              value: noteCategory,
+              child: Container(
+                width: screenSize.width - 120.0,
+                child: noteCategory.icon,
+              ),
+            );
+          }).toList(),
+        ));
+  }
+
+  getClearCategoryButton(){
+
+    return IconButton(
+      icon: Icon(Icons.clear),
+      onPressed: (){
+        updateListView(-1);
+
+        setState(() {
+          _selectedNoteCategory = null;
+        });
+      }
+      ,
+    );
+  }
+
+  getGridViewFlexible() {
+    return Flexible(
+      child: getGridView(),
     );
   }
 
@@ -46,21 +117,24 @@ class _NoteListPageState extends State<NoteListPage> {
   }
 
   GestureDetector getNoteGestureDetector(index) {
-    return  GestureDetector(
-      onTap: () {navigateToNote(noteList[index]);},
-      onLongPress: (){_deleteNote(index);},
+    return GestureDetector(
+      onTap: () {
+        navigateToNote(noteList[index]);
+      },
+      onLongPress: () {
+        _deleteNote(index);
+      },
       child: getNoteCard(index),
     );
   }
 
-  getNoteCard(index){
-    return  Card(
+  getNoteCard(index) {
+    return Card(
         child: Container(
-          margin: EdgeInsets.all(4.0),
-          padding: EdgeInsets.all(4.0),
-          child: getNoteColumn(index),
-        )
-    );
+      margin: EdgeInsets.all(4.0),
+      padding: EdgeInsets.all(4.0),
+      child: getNoteColumn(index),
+    ));
   }
 
   Column getNoteColumn(index) {
@@ -73,42 +147,36 @@ class _NoteListPageState extends State<NoteListPage> {
     );
   }
 
-
   getTitle(index) {
-    return
-        Container(
-          padding: EdgeInsets.all(6.0),
-            alignment: Alignment.topLeft,
-            child: Text(
-              noteList[index].title,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-              maxLines: 1,
-        )
-    );
+    return Container(
+        padding: EdgeInsets.all(6.0),
+        alignment: Alignment.topLeft,
+        child: Text(
+          noteList[index].title,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
+          maxLines: 1,
+        ));
   }
 
   getNote(index) {
-    return
-        Container(
-            padding: EdgeInsets.all(4.0),
-            alignment: Alignment.centerLeft,
-            child: Text(
-              noteList[index].content,
-              style: TextStyle(
-                fontSize: 12,
-              ),
-              maxLines: 5,
-            )
-
-    );
+    return Container(
+        padding: EdgeInsets.all(4.0),
+        alignment: Alignment.centerLeft,
+        child: Text(
+          noteList[index].content,
+          style: TextStyle(
+            fontSize: 12,
+          ),
+          maxLines: 5,
+        ));
   }
 
   Container getRow(index) {
     return Container(
-        padding: EdgeInsets.only(bottom:2.0, left: 6.0),
+        padding: EdgeInsets.only(bottom: 2.0, left: 6.0),
         alignment: Alignment.topRight,
         child: Row(children: [
           Flexible(
@@ -119,7 +187,9 @@ class _NoteListPageState extends State<NoteListPage> {
           Flexible(
             fit: FlexFit.tight,
             flex: 1,
-            child: getCategoryIcon(noteList[index].category),),
+            child: NoteCategory.getCategoryIcon(noteList[index].category),
+
+          ),
         ]));
   }
 
@@ -131,22 +201,10 @@ class _NoteListPageState extends State<NoteListPage> {
     return strDate.substring(0, strDate.indexOf(' '));
   }
 
-  getCategoryIcon (categoryNumber){
-
-    switch(categoryNumber){
-      case 1 : return Icon(Icons.work, color: Colors.lightBlue[400]);
-      case 2 : return Icon(Icons.home, color: Colors.lightBlue[400]);
-      case 3 : return Icon(Icons.airplanemode_active, color: Colors.lightBlue[400]);
-      case 4 : return Icon(Icons.child_care, color: Colors.lightBlue[400]);
-      case 0 : return Icon(Icons.archive, color: Colors.lightBlue[400]);
-    }
-
-  }
-
-  void updateListView() {
+  void updateListView(categoryNumber) {
     final Future<Database> dbFuture = helper.initializeDatabase();
     dbFuture.then((database) {
-      Future<List<Note>> noteListFuture = helper.getNoteList();
+      Future<List<Note>> noteListFuture = helper.getNoteList(categoryNumber);
       noteListFuture.then((noteList) {
         setState(() {
           this.noteList = noteList;
@@ -156,21 +214,19 @@ class _NoteListPageState extends State<NoteListPage> {
   }
 
   void navigateToNote(Note note) async {
-
     await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return NotePage(note);
     }));
-
   }
 
   void _deleteNote(int position) async {
     int result = await helper.deleteNote(noteList[position].id);
     if (result != 0) {
-      updateListView();
-      UiUtility.showAlertDialog('Status', 'Note Deleted Successfully',context);
+      updateListView(-1);
+      UiUtility.showAlertDialog('Status', 'Note Deleted Successfully', context);
     } else {
-      UiUtility.showAlertDialog('Status', 'Error Occured while Deleting Note', context);
+      UiUtility.showAlertDialog(
+          'Status', 'Error Occured while Deleting Note', context);
     }
   }
-
 }
