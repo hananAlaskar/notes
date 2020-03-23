@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_app/pages/NoteListPage.dart';
 
 
 class MyHome extends StatefulWidget {
@@ -6,9 +7,7 @@ class MyHome extends StatefulWidget {
   MyHomeState createState() => MyHomeState();
 }
 
-// SingleTickerProviderStateMixin is used for animation
 class MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
-  // Create a tab controller
   TabController _homeTabController;
   Color _color;
 
@@ -50,7 +49,7 @@ class MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
   }
 
   getHomeTabBarItems() {
-    return <Widget>[Text("Note List"), Text("Add Note")];
+    return <Widget>[NoteListPage(), Text("Add Note")];
   }
 
   getHomeBottomNavigationBar() {
