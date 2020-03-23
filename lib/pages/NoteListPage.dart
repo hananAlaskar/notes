@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/pages/NotePage.dart';
+import 'package:notes_app/ui_utility/UiUtility.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:notes_app/model/Note.dart';
 import 'package:notes_app/model/database_helper.dart';
@@ -46,8 +47,8 @@ class _NoteListPageState extends State<NoteListPage> {
 
   GestureDetector getNoteGestureDetector(index) {
     return  GestureDetector(
-      onTap: () {navigateToNote(noteList[index]);
-    },
+      onTap: () {navigateToNote(noteList[index]);},
+      onLongPress: (){_deleteNote(index);},
       child: getNoteCard(index),
     );
   }
@@ -149,4 +150,17 @@ class _NoteListPageState extends State<NoteListPage> {
     }));
 
   }
+
+
+  // The note has to be cleared from the database and the local list
+  void _deleteNote(int position) async {
+    int result = await helper.deleteNote(noteList[position].id);
+    if (result != 0) {
+      updateListView();
+      UiUtility.showAlertDialog('Status', 'Note Deleted Successfully',context);
+    } else {
+      UiUtility.showAlertDialog('Status', 'Error Occured while Deleting Note', context);
+    }
+  }
+
 }
