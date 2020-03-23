@@ -38,7 +38,7 @@ class _NoteListPageState extends State<NoteListPage> {
     var gridViewCount = this.noteList.length;
 
     return GridView.count(
-      crossAxisCount: 3,
+      crossAxisCount: 2,
       children: List.generate(gridViewCount, (index) {
         return getNoteGestureDetector(index);
       }),
@@ -73,13 +73,12 @@ class _NoteListPageState extends State<NoteListPage> {
     );
   }
 
-  Flexible getTitle(index) {
-    return Flexible(
-        fit: FlexFit.tight,
-        flex: 1,
-        child: Container(
-          padding: EdgeInsets.all(4.0),
-            alignment: Alignment.topCenter,
+
+  getTitle(index) {
+    return
+        Container(
+          padding: EdgeInsets.all(6.0),
+            alignment: Alignment.topLeft,
             child: Text(
               noteList[index].title,
               style: TextStyle(
@@ -87,39 +86,40 @@ class _NoteListPageState extends State<NoteListPage> {
                 fontWeight: FontWeight.bold,
               ),
               maxLines: 1,
-            )));
+        )
+    );
   }
 
-  Flexible getNote(index) {
-    return Flexible(
-        fit: FlexFit.tight,
-        flex: 1,
-        child: Container(
+  getNote(index) {
+    return
+        Container(
+            padding: EdgeInsets.all(4.0),
             alignment: Alignment.centerLeft,
             child: Text(
               noteList[index].content,
               style: TextStyle(
                 fontSize: 12,
               ),
-              maxLines: 2,
-            )));
+              maxLines: 5,
+            )
+
+    );
   }
 
   Container getRow(index) {
     return Container(
-        padding: EdgeInsets.only(bottom:2.0),
-        alignment: Alignment.topCenter,
+        padding: EdgeInsets.only(bottom:2.0, left: 6.0),
+        alignment: Alignment.topRight,
         child: Row(children: [
           Flexible(
             fit: FlexFit.tight,
-            flex: 1,
-            child: Icon(Icons.note, size: 15,),
+            flex: 3,
+            child: getDate(index),
           ),
           Flexible(
             fit: FlexFit.tight,
-            flex: 4,
-            child: getDate(index),
-          ),
+            flex: 1,
+            child: getCategoryIcon(noteList[index].category),),
         ]));
   }
 
@@ -129,6 +129,18 @@ class _NoteListPageState extends State<NoteListPage> {
 
   String getDateString(String strDate) {
     return strDate.substring(0, strDate.indexOf(' '));
+  }
+
+  getCategoryIcon (categoryNumber){
+
+    switch(categoryNumber){
+      case 1 : return Icon(Icons.work, color: Colors.lightBlue[400]);
+      case 2 : return Icon(Icons.home, color: Colors.lightBlue[400]);
+      case 3 : return Icon(Icons.airplanemode_active, color: Colors.lightBlue[400]);
+      case 4 : return Icon(Icons.child_care, color: Colors.lightBlue[400]);
+      case 0 : return Icon(Icons.archive, color: Colors.lightBlue[400]);
+    }
+
   }
 
   void updateListView() {
@@ -151,8 +163,6 @@ class _NoteListPageState extends State<NoteListPage> {
 
   }
 
-
-  // The note has to be cleared from the database and the local list
   void _deleteNote(int position) async {
     int result = await helper.deleteNote(noteList[position].id);
     if (result != 0) {

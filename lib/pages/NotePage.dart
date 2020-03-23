@@ -28,7 +28,7 @@ class _NotePageState extends State<NotePage> {
             margin: EdgeInsets.all(24.0),
             child: Column(
               children: <Widget>[
-                getNoteDateContainer(),
+                getRow(),
                 getNoteTitleContainer(),
                 getNoteContentContainer()
               ],
@@ -43,12 +43,35 @@ class _NotePageState extends State<NotePage> {
     );
   }
 
+
+  Container getRow() {
+    return Container(
+        padding: EdgeInsets.only(bottom:2.0, left: 6.0),
+        alignment: Alignment.topRight,
+        child: Row(children: [
+          getNoteDateContainer(),
+         getCategoryIcon(note.category),
+        ]));
+  }
+
+  getCategoryIcon (categoryNumber){
+
+    switch(categoryNumber){
+      case 1 : return Icon(Icons.work, color: Colors.lightBlue[400]);
+      case 2 : return Icon(Icons.home, color: Colors.lightBlue[400]);
+      case 3 : return Icon(Icons.airplanemode_active, color: Colors.lightBlue[400]);
+      case 4 : return Icon(Icons.child_care, color: Colors.lightBlue[400]);
+      case 0 : return Icon(Icons.archive, color: Colors.lightBlue[400]);
+    }
+
+  }
+
   Container getNoteDateContainer() {
     final Size screenSize = MediaQuery.of(context).size;
 
     return Container(
-      padding: EdgeInsets.all(16.0),
-      width: screenSize.width,
+      padding: EdgeInsets.all(8.0),
+      width: screenSize.width-100,
       child: Text(
         getDate(),
         style: TextStyle(fontSize: 16.0),

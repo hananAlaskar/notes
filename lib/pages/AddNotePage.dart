@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:notes_app/model/Note.dart';
 import 'package:notes_app/model/database_helper.dart';
@@ -19,11 +18,21 @@ class _AddNotePageState extends State<AddNotePage> {
   DatabaseHelper helper = DatabaseHelper();
   int count = 0;
 
-  File imageURI;
+  List<NoteCategory> _noteCategories = <NoteCategory>[
+    const NoteCategory(1, Icon(Icons.work,color: Colors.lightBlue,)),
+    const NoteCategory(2,Icon(Icons.home, color: Colors.lightBlue)),
+    const NoteCategory(3,Icon(Icons.airplanemode_active, color: Colors.lightBlue)),
+    const NoteCategory(4,Icon(Icons.child_care, color: Colors.lightBlue)),
+    const NoteCategory(5,Icon(Icons.archive, color: Colors.lightBlue)),
+
+  ];
+
+  NoteCategory _selectedNoteCategory;
 
   @override
   void initState() {
     super.initState();
+    _selectedNoteCategory = _noteCategories[0];
   }
 
   @override
@@ -45,6 +54,7 @@ class _AddNotePageState extends State<AddNotePage> {
                 children: <Widget>[
                   getAddNoteTitleInputTextContainer(),
                   getAddNoteContainInputTextContainer(),
+                  getCategoryDropdownButton(),
                   addNoteButtonContainer(),
                 ],
               ),
@@ -133,7 +143,7 @@ class _AddNotePageState extends State<AddNotePage> {
 
   Note createNote() {
     return new Note(
-        addNoteTitleInputController.text, addNoteInputController.text);
+        addNoteTitleInputController.text, addNoteInputController.text, _selectedNoteCategory.number);
   }
 
 
@@ -154,4 +164,36 @@ class _AddNotePageState extends State<AddNotePage> {
   }
 
 
+  getCategoryDropdownButton() {
+    final Size screenSize = MediaQuery.of(context).size;
+
+    return DropdownButton<NoteCategory>(
+      hint: Text("Select Category"),
+      value: _selectedNoteCategory,
+      onChanged: (NoteCategory noteCategory) {
+        setState(() {
+          _selectedNoteCategory = noteCategory;
+        });
+      },
+      items: _noteCategories.map((NoteCategory noteCategory) {
+        return DropdownMenuItem<NoteCategory>(
+          value: noteCategory,
+          child: Row(
+            children: <Widget>[
+              SizedBox(width: screenSize.width-100.0, child: noteCategory.icon,),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+
+  }
+
+}
+
+
+class NoteCategory{
+  const NoteCategory(this.number,this.icon);
+  final int number;
+  final Icon icon;
 }

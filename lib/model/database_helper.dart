@@ -14,6 +14,7 @@ class DatabaseHelper {
   String colId = 'id';
   String colTitle = 'title';
   String colContent = 'content';
+  String colCategory = 'category';
   String colDate = 'date';
 
   DatabaseHelper._createInstance();
@@ -46,7 +47,7 @@ class DatabaseHelper {
   void _createDb(Database db, int newVersion) async {
 
     await db.execute('CREATE TABLE $noteTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colTitle TEXT, '
-        '$colContent TEXT, $colDate TEXT)');
+        '$colContent TEXT, $colDate TEXT, $colCategory INTEGER )');
 
   }
 
