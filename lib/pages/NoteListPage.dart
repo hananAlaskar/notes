@@ -12,10 +12,8 @@ class NoteListPage extends StatefulWidget {
 }
 
 class _NoteListPageState extends State<NoteListPage> {
-
   List<Note> noteList;
   DatabaseHelper helper = DatabaseHelper();
-  int count = 0;
 
   @override
   void initState() {
@@ -30,28 +28,99 @@ class _NoteListPageState extends State<NoteListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Note List"),
-        ),
-        body: getListView()
-        );
-  }
-
-  getListView() {
-
-    return ListView.builder(
-      itemCount: noteList.length,
-      itemBuilder: (context, position) {
-        return Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(noteList[position].title, style: TextStyle(fontSize: 22.0),),
-          ),
-        );
-      },
+        body: getGridView()
     );
   }
 
+  GridView getGridView() {
+    var gridViewCount = this.noteList.length;
+
+    return GridView.count(
+      crossAxisCount: 3,
+      children: List.generate(gridViewCount, (index) {
+        return getNoteContainer(index);
+      }),
+    );
+  }
+
+  Container getNoteContainer(index) {
+    return new Container(
+      child: Card(
+          child: Container(
+        margin: EdgeInsets.all(4.0),
+        padding: EdgeInsets.all(4.0),
+        child: getNoteColumn(index),
+      )),
+    );
+  }
+
+  Column getNoteColumn(index) {
+    return Column(
+      children: <Widget>[
+        getRow(index),
+        getTitle(index),
+        getNote(index),
+      ],
+    );
+  }
+
+  getTitle(index) {
+    return Flexible(
+        fit: FlexFit.tight,
+        flex: 1,
+        child: Container(
+          padding: EdgeInsets.all(4.0),
+            alignment: Alignment.topCenter,
+            child: Text(
+              noteList[index].title,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+              maxLines: 1,
+            )));
+  }
+
+  getNote(index) {
+    return Flexible(
+        fit: FlexFit.tight,
+        flex: 1,
+        child: Container(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              noteList[index].content,
+              style: TextStyle(
+                fontSize: 12,
+              ),
+              maxLines: 2,
+            )));
+  }
+
+  Container getRow(index) {
+    return Container(
+        padding: EdgeInsets.only(bottom:2.0),
+        alignment: Alignment.topCenter,
+        child: Row(children: [
+          Flexible(
+            fit: FlexFit.tight,
+            flex: 1,
+            child: Icon(Icons.note, size: 15,),
+          ),
+          Flexible(
+            fit: FlexFit.tight,
+            flex: 4,
+            child: getDate(index),
+          ),
+        ]));
+  }
+
+  Text getDate(index) {
+    return Text(getDateString(noteList[index].date));
+  }
+
+  String getDateString(String strDate) {
+    return strDate.substring(0, strDate.indexOf(' '));
+  }
 
   void updateListView() {
     final Future<Database> dbFuture = helper.initializeDatabase();
@@ -64,6 +133,5 @@ class _NoteListPageState extends State<NoteListPage> {
       });
     });
   }
-
 
 }
