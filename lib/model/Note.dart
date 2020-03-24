@@ -22,6 +22,12 @@ class Note {
   int get category => _category;
   String get title => _title;
 
+  set title(title) => _title = title;
+  set category(category) => _category = category;
+  set content(content) => _content = content;
+
+
+
   Map<String, dynamic> toMap() {
 
     var map = Map<String, dynamic>();

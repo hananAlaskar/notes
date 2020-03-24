@@ -148,36 +148,44 @@ class _AddNotePageState extends State<AddNotePage> {
 
   getCategoryRow() {
     return Container(
-      padding: EdgeInsets.all(16.0),
-
+        padding: EdgeInsets.all(16.0),
         child: Row(
-      children: <Widget>[
-        getCategoryDropdownButton(),
-        getClearCategoryButton(),
-      ],
-    ));
+          children: <Widget>[
+            getCategoryDropdownButton(),
+            getClearCategoryButton(),
+          ],
+        ));
   }
 
   getCategoryDropdownButton() {
+    return DropdownButton<NoteCategory>(
+        hint: Text("Select Category"),
+        value: _selectedNoteCategory,
+        onChanged:
+            (NoteCategory noteCategory) {
+          setState(() {
+            _selectedNoteCategory = noteCategory;
+          });
+        }
+        ,
+        items: getCategoryDropdownButtonItems());
+  }
+
+  getCategoryDropdownButtonItems() {
+    return _noteCategories.map((NoteCategory noteCategory) {
+      return getCategoryDropdownMenuItem(noteCategory);
+    }).toList();
+  }
+
+  DropdownMenuItem getCategoryDropdownMenuItem(noteCategory) {
     final Size screenSize = MediaQuery.of(context).size;
 
-    return DropdownButton<NoteCategory>(
-      hint: Text("Select Category"),
-      value: _selectedNoteCategory,
-      onChanged: (NoteCategory noteCategory) {
-        setState(() {
-          _selectedNoteCategory = noteCategory;
-        });
-      },
-      items: _noteCategories.map((NoteCategory noteCategory) {
-        return DropdownMenuItem<NoteCategory>(
-            value: noteCategory,
-            child: SizedBox(
-              width: screenSize.width - 140.0,
-              child: noteCategory.icon,
-            ));
-      }).toList(),
-    );
+    return DropdownMenuItem<NoteCategory>(
+        value: noteCategory,
+        child: SizedBox(
+          width: screenSize.width - 140.0,
+          child: noteCategory.icon,
+        ));
   }
 
   getClearCategoryButton() {
