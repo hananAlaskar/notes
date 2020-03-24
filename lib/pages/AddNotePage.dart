@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:notes_app/model/Note.dart';
 import 'package:notes_app/model/NoteCategory.dart';
 import 'package:notes_app/model/database_helper.dart';
+import 'package:notes_app/pages/CategoryDropdownButton.dart';
 import 'package:notes_app/pages/NotePage.dart';
 
 class AddNotePage extends StatefulWidget {
@@ -18,14 +19,12 @@ class _AddNotePageState extends State<AddNotePage> {
   DatabaseHelper helper = DatabaseHelper();
   int count = 0;
 
-  List<NoteCategory> _noteCategories;
   NoteCategory _selectedNoteCategory;
 
   @override
   void initState() {
     super.initState();
 
-    _noteCategories = NoteCategory.noteCategories;
   }
 
   @override
@@ -157,36 +156,27 @@ class _AddNotePageState extends State<AddNotePage> {
         ));
   }
 
+
   getCategoryDropdownButton() {
-    return DropdownButton<NoteCategory>(
-        hint: Text("Select Category"),
-        value: _selectedNoteCategory,
-        onChanged:
-            (NoteCategory noteCategory) {
-          setState(() {
-            _selectedNoteCategory = noteCategory;
-          });
-        }
-        ,
-        items: getCategoryDropdownButtonItems());
+
+    return Container(
+        alignment: Alignment.topCenter,
+        child: DropdownButton<NoteCategory>(
+          hint: Text("Select Category"),
+          value: _selectedNoteCategory,
+          onChanged:(NoteCategory noteCategory){categoryDropdownOnChanged(noteCategory);},
+            items:CategoryDropdownButton.getCategoryDropdownButtonItems(context, 140))
+    );
   }
 
-  getCategoryDropdownButtonItems() {
-    return _noteCategories.map((NoteCategory noteCategory) {
-      return getCategoryDropdownMenuItem(noteCategory);
-    }).toList();
+  categoryDropdownOnChanged(noteCategory){
+
+      setState(() {
+        _selectedNoteCategory = noteCategory;
+      });
+
   }
 
-  DropdownMenuItem getCategoryDropdownMenuItem(noteCategory) {
-    final Size screenSize = MediaQuery.of(context).size;
-
-    return DropdownMenuItem<NoteCategory>(
-        value: noteCategory,
-        child: SizedBox(
-          width: screenSize.width - 140.0,
-          child: noteCategory.icon,
-        ));
-  }
 
   getClearCategoryButton() {
     return IconButton(

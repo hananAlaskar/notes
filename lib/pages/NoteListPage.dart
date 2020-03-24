@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/model/NoteCategory.dart';
+import 'package:notes_app/pages/CategoryDropdownButton.dart';
 import 'package:notes_app/pages/NotePage.dart';
 import 'package:notes_app/ui_utility/UiUtility.dart';
 import 'package:sqflite/sqflite.dart';
@@ -18,7 +19,6 @@ class _NoteListPageState extends State<NoteListPage> {
   List<Note> noteList;
   DatabaseHelper helper = DatabaseHelper();
 
-  List<NoteCategory> _noteCategories;
   NoteCategory _selectedNoteCategory;
 
   @override
@@ -29,8 +29,6 @@ class _NoteListPageState extends State<NoteListPage> {
       noteList = List<Note>();
       updateListView(-1);
     }
-
-    _noteCategories = NoteCategory.noteCategories;
   }
 
   @override
@@ -58,30 +56,23 @@ class _NoteListPageState extends State<NoteListPage> {
   }
 
   getCategoryDropdownButton() {
-    final Size screenSize = MediaQuery.of(context).size;
 
     return Container(
         alignment: Alignment.topCenter,
-        padding: EdgeInsets.all(6.0),
         child: DropdownButton<NoteCategory>(
-          hint: Text("Select Category"),
-          value: _selectedNoteCategory,
-          onChanged: (NoteCategory noteCategory) {
-            updateListView(noteCategory.number);
-            setState(() {
-              _selectedNoteCategory = noteCategory;
-            });
-          },
-          items: _noteCategories.map((NoteCategory noteCategory) {
-            return DropdownMenuItem<NoteCategory>(
-              value: noteCategory,
-              child: Container(
-                width: screenSize.width - 120.0,
-                child: noteCategory.icon,
-              ),
-            );
-          }).toList(),
-        ));
+            hint: Text("Select Category"),
+            value: _selectedNoteCategory,
+            onChanged:(NoteCategory noteCategory){categoryDropdownOnChanged(noteCategory);},
+            items:CategoryDropdownButton.getCategoryDropdownButtonItems(context, 100))
+    );
+  }
+
+  categoryDropdownOnChanged(noteCategory){
+    updateListView(noteCategory.number);
+    setState(() {
+      _selectedNoteCategory = noteCategory;
+    });
+
   }
 
   getClearCategoryButton(){
