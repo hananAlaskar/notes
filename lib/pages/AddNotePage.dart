@@ -41,7 +41,6 @@ class _AddNotePageState extends State<AddNotePage> {
           child: Card(
         margin: EdgeInsets.all(16.0),
         child: Container(
-          height: 400,
           child: Column(
             children: <Widget>[
               getAddNoteTitleInputTextContainer(),
@@ -56,34 +55,53 @@ class _AddNotePageState extends State<AddNotePage> {
   }
 
   Container getAddNoteTitleInputTextContainer() {
-    return getAddNoteInputTextContainer(
-        'Add note title', 16.0, 1.5, addNoteTitleInputController, 1);
+    return getAddNoteInputTextContainer(getNoteTitleInputTextField());
   }
 
   Container getAddNoteContainInputTextContainer() {
-    return getAddNoteInputTextContainer(
-        'Add a note', 24.0, 2.0, addNoteInputController, 2);
+
+    return getAddNoteInputTextContainer(getNoteInputTextField());
+
   }
 
-  Container getAddNoteInputTextContainer(
-      hint, fontSize, fontHeight, inputController, maxLines) {
+  Container getAddNoteInputTextContainer(inputTextField) {
     final Size screenSize = MediaQuery.of(context).size;
 
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).accentColor,
       margin: EdgeInsets.all(16.0),
       padding: EdgeInsets.only(left: 16.0, right: 16.0),
       width: screenSize.width,
-      child: getInputTextField(
-          maxLines, fontSize, fontHeight, hint, inputController),
+      child: inputTextField,
     );
   }
+
+
+  TextField getNoteTitleInputTextField() {
+    return TextField(
+      maxLines: 1,
+      style: Theme.of(context).textTheme.display2,
+      decoration: getInputDecoration('Add note title'),
+      controller: addNoteTitleInputController,
+    );
+  }
+
+  TextField getNoteInputTextField() {
+    return TextField(
+      maxLines: 3,
+      style: Theme.of(context).textTheme.display1,
+      decoration: getInputDecoration('Add a note'),
+      controller: addNoteInputController,
+    );
+  }
+
 
   TextField getInputTextField(
       maxLines, fontSize, fontHeight, hint, inputController) {
     return TextField(
       maxLines: maxLines,
       style: new TextStyle(
+
           fontSize: fontSize, height: fontHeight, color: Colors.black),
       decoration: getInputDecoration(hint),
       controller: inputController,
@@ -114,7 +132,8 @@ class _AddNotePageState extends State<AddNotePage> {
   Text getAddNoteButtonText() {
     return Text(
       'Add',
-      style: new TextStyle(color: Colors.white),
+      style: Theme.of(context).textTheme.button,
+
     );
   }
 

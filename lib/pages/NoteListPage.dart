@@ -144,10 +144,7 @@ class _NoteListPageState extends State<NoteListPage> {
         alignment: Alignment.topLeft,
         child: Text(
           noteList[index].title,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.subtitle,
           maxLines: 1,
         ));
   }
@@ -158,9 +155,7 @@ class _NoteListPageState extends State<NoteListPage> {
         alignment: Alignment.centerLeft,
         child: Text(
           noteList[index].content,
-          style: TextStyle(
-            fontSize: 12,
-          ),
+          style: Theme.of(context).textTheme.body2,
           maxLines: 5,
         ));
   }

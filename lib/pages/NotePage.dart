@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:notes_app/model/Note.dart';
 import 'package:notes_app/model/NoteCategory.dart';
 import 'package:notes_app/model/database_helper.dart';
@@ -15,7 +16,9 @@ class _NotePageState extends State<NotePage> {
   DatabaseHelper helper = DatabaseHelper();
 
   Note note;
-  bool _isUpdate;
+  bool _isUpdateTitle;
+  bool _isUpdateContent;
+
 
   Widget _noteTitleWidget;
   Widget _noteContentWidget;
@@ -25,11 +28,12 @@ class _NotePageState extends State<NotePage> {
 
   _NotePageState(Note note) {
     this.note = note;
-    _isUpdate = false;
 
-    _noteTitleWidget = getNoteTitleContainerChild();
-    _noteContentWidget = getNoteContentContainerChild();
+    _isUpdateTitle = false;
+    _isUpdateContent = false;
+
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,16 +45,24 @@ class _NotePageState extends State<NotePage> {
   }
 
   getNoteBody() {
+
+    setNoteTitleWidget();
+
     return Container(
         decoration: myBoxDecoration(),
         margin: EdgeInsets.all(24.0),
         child: getNoteColumn());
   }
 
+  setNoteTitleWidget(){
+    _noteTitleWidget = getNoteTitleContainerChild();
+    _noteContentWidget = getNoteContentContainerChild();
+  }
+
   BoxDecoration myBoxDecoration() {
     return BoxDecoration(
-      color: Colors.lightBlue[100],
-      border: Border.all(color: Colors.lightBlue[100], width: 5.0),
+      color: Theme.of(context).cardColor,
+      border: Border.all(color: Theme.of(context).cardColor, width: 5.0),
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
     );
   }
@@ -103,7 +115,7 @@ class _NotePageState extends State<NotePage> {
 
   updateNoteTitle() {
     setState(() {
-      if (_isUpdate == null || _isUpdate == false)
+      if (_isUpdateTitle == null || _isUpdateTitle == false)
         startUpdatingNoteTitle();
       else
         finisUpdatingNoteTitle();
@@ -112,12 +124,12 @@ class _NotePageState extends State<NotePage> {
   }
 
   startUpdatingNoteTitle() {
-    _isUpdate = true;
+    _isUpdateTitle = true;
     _noteTitleInputController.text = note.title;
   }
 
   finisUpdatingNoteTitle() {
-    _isUpdate = false;
+    _isUpdateTitle = false;
     note.title = _noteTitleInputController.text;
     updateNote(note);
   }
@@ -134,23 +146,22 @@ class _NotePageState extends State<NotePage> {
   }
 
   Widget getNoteTitleContainerChild() {
-    if (_isUpdate == true)
+    if (_isUpdateTitle == true)
       return TextField(
         controller: _noteTitleInputController,
       );
 
     return Text(
       note.title,
-      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      style: Theme.of(context).textTheme.title,
+
     );
   }
 
   getNoteContentGestureDetector() {
     return GestureDetector(
       onDoubleTap: () {
-        setState(() {
-          startUpdatingNoteContent();
-        });
+        updateNoteContent();
       },
       child: getNoteContentContainer(),
     );
@@ -158,22 +169,21 @@ class _NotePageState extends State<NotePage> {
 
   updateNoteContent() {
     setState(() {
-      if (_isUpdate == null || _isUpdate == false)
+      if (_isUpdateContent == null || _isUpdateContent == false)
         startUpdatingNoteContent();
       else
         finisUpdatingNoteContent();
-
       _noteContentWidget = getNoteContentContainerChild();
     });
   }
 
   startUpdatingNoteContent() {
-    _isUpdate = true;
+    _isUpdateContent = true;
     _noteContentInputController.text = note.content;
   }
 
   finisUpdatingNoteContent() {
-    _isUpdate = false;
+    _isUpdateContent = false;
     note.content = _noteContentInputController.text;
     updateNote(note);
   }
@@ -190,7 +200,7 @@ class _NotePageState extends State<NotePage> {
   }
 
   Widget getNoteContentContainerChild() {
-    if (_isUpdate == true)
+    if (_isUpdateContent == true)
       return TextField(
         controller: _noteContentInputController,
         maxLines: 6,
@@ -198,7 +208,7 @@ class _NotePageState extends State<NotePage> {
 
     return Text(
       note.content,
-      style: TextStyle(fontSize: 16.0),
+      style: Theme.of(context).textTheme.body1,
     );
   }
 

@@ -10,14 +10,12 @@ class MyHome extends StatefulWidget {
 
 class MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
   TabController _homeTabController;
-  Color _color;
 
   @override
   void initState() {
     super.initState();
 
     _homeTabController = TabController(length: 2, vsync: this);
-    _color = Colors.blue;
   }
 
   @override
@@ -32,13 +30,14 @@ class MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
       appBar: getHomeAppBar(),
       body: getHomeTabBarView(),
       bottomNavigationBar: getHomeBottomNavigationBar(),
+      backgroundColor: Theme.of(context).backgroundColor,
     );
   }
 
   AppBar getHomeAppBar() {
     return AppBar(
       title: Text("My Note"),
-      backgroundColor: _color,
+      backgroundColor: Theme.of(context).primaryColor,
     );
   }
 
@@ -54,7 +53,7 @@ class MyHomeState extends State<MyHome> with SingleTickerProviderStateMixin {
   }
 
   Material getHomeBottomNavigationBar() {
-    return Material(color: _color, child: getHomeTabBar());
+    return Material(color:  Theme.of(context).primaryColor, child: getHomeTabBar());
   }
 
   TabBar getHomeTabBar() {
