@@ -29,6 +29,10 @@ dev_dependencies:
     sdk: flutter
   sqflite: any
   path_provider: any
+  flutter_linkify: ^3.1.0
+  url_launcher: ^5.4.2
+
+
 
 
 # For information on the generic Dart part of this file, see the
