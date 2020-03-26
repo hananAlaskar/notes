@@ -27,6 +27,6 @@ MIT
 
 ## Some Screenshots
 
-![Add Note](screenshot/add_note.gif) ![View Note](screenshot/scrollable_note.gif) ![View With Link](screenshot/clickable_link.gif)
+![Add Note](screenshot/add_note.gif = 250x250) ![View Note](screenshot/scrollable_note.gif) ![View With Link](screenshot/clickable_link.gif)
 ![View Note With Image](screenshot/note_with_image.gif)![Edit Note](screenshot/edit_note.gif)![Note Category](screenshot/note_category.gif)
 ![Note Dark Mode](screenshot/dark_mode.gif)
