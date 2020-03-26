@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
-import 'package:notes_app/uitility/ImageUtility.dart';
+import 'package:notes_app/utility/ImageUtility.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:notes_app/model/Note.dart';
 import 'package:notes_app/model/NoteCategory.dart';

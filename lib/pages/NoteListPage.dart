@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:notes_app/model/NoteCategory.dart';
 import 'package:notes_app/pages/CategoryDropdownButton.dart';
 import 'package:notes_app/pages/NotePage.dart';
-import 'package:notes_app/uitility/ui_utility/UiUtility.dart';
+import 'package:notes_app/utility/ui_utility/UiUtility.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:notes_app/model/Note.dart';
 import 'package:notes_app/model/database_helper.dart';

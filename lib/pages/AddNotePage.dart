@@ -7,8 +7,8 @@ import 'package:notes_app/model/database_helper.dart';
 import 'package:notes_app/pages/CategoryDropdownButton.dart';
 import 'package:notes_app/pages/NotePage.dart';
 import 'dart:async';
-import 'package:notes_app/uitility/ImageUtility.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:notes_app/utility/ImageUtility.dart';
 
 class AddNotePage extends StatefulWidget {
   AddNotePage({Key key}) : super(key: key);
