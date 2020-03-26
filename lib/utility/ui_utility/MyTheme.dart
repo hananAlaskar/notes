@@ -21,7 +21,7 @@ class MyTheme{
           display1: TextStyle(fontSize: 24.0, height: 2.0, color: Colors.indigo[100]),
           display2: TextStyle(fontSize: 16.0, height: 1.5, color:Colors.indigo[100]),
           body1: TextStyle(fontSize: 16.0, fontFamily: 'Hind', color: Colors.indigo[100]),
-          body2: TextStyle(fontSize: 14.0, fontFamily: 'Hind', color: Colors.indigo[50]),
+          body2: TextStyle(fontSize: 12.0, fontFamily: 'Hind', color: Colors.indigo[50]),
           button: TextStyle(fontSize: 14.0, fontFamily: 'Hind', color: Colors.indigo[50]),
 
         )

@@ -30,10 +30,10 @@ class NoteCategory{
       case 2 : return Icon(Icons.home, );
       case 3 : return Icon(Icons.school,);
       case 4 : return Icon(Icons.laptop_chromebook, );
-      case 1 : return Icon(Icons.schedule, );
-      case 2 : return Icon(Icons.airplanemode_active, );
-      case 3 : return Icon(Icons.people,);
-      case 4 : return Icon(Icons.archive, );
+      case 5 : return Icon(Icons.schedule, );
+      case 6 : return Icon(Icons.airplanemode_active, );
+      case 7 : return Icon(Icons.people,);
+      case 8 : return Icon(Icons.archive, );
 
     }
 

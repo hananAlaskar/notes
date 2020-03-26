@@ -15,7 +15,7 @@ class NotePage extends StatefulWidget {
   _NotePageState createState() => _NotePageState(this.note);
 }
 
-class _NotePageState extends State<NotePage> {
+class _NotePageState extends State<NotePage>  {
   DatabaseHelper helper = DatabaseHelper();
 
   Note _note;
@@ -39,6 +39,7 @@ class _NotePageState extends State<NotePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         appBar: AppBar(
           title: Text(_note.title),
@@ -46,13 +47,22 @@ class _NotePageState extends State<NotePage> {
         body: getNoteBody());
   }
 
-  getNoteBody() {
-    setNoteTitleWidget();
+   getNoteBody() {
 
-    return Container(
-        decoration: myBoxDecoration(),
-        margin: EdgeInsets.all(24.0),
-        child: getNoteColumn());
+     setNoteTitleWidget();
+
+     return  SingleChildScrollView(
+        child:
+         Card(
+           color: Theme.of(context).cardColor,
+            margin: EdgeInsets.all(24.0),
+            child:
+
+            Container(
+              padding: EdgeInsets.only(bottom: 24.0),
+                child:getNoteColumn()),
+         ),);
+
   }
 
   setNoteTitleWidget() {
@@ -60,25 +70,16 @@ class _NotePageState extends State<NotePage> {
     _noteContentWidget = getNoteContentContainerChild();
   }
 
-  BoxDecoration myBoxDecoration() {
-    return BoxDecoration(
-      color: Theme
-          .of(context)
-          .cardColor,
-      border: Border.all(color: Theme
-          .of(context)
-          .cardColor, width: 5.0),
-      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-    );
-  }
 
   Column getNoteColumn() {
+
     return Column(
       children: <Widget>[
         getRow(),
         getNoteTitleGestureDetector(),
         getNoteContentGestureDetector(),
-        getNoteImage()
+        getNoteImage(),
+
       ],
     );
   }
@@ -97,17 +98,17 @@ class _NotePageState extends State<NotePage> {
     return NoteCategory.getCategoryIcon(_note.category);
   }
 
-  Container getNoteDateContainer() {
-    final Size screenSize = MediaQuery
-        .of(context)
-        .size;
+   getNoteDateContainer() {
+     final Size screenSize = MediaQuery.of(context).size;
 
     return Container(
-      padding: EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(16.0),
       width: screenSize.width - 100,
-      child: Text(DateUtility.getDate(_note.date),
-    style: Theme.of(context).textTheme.body2,
+      child: Text(
+        DateUtility.getDate(_note.date),
+        style: Theme.of(context).textTheme.body2,
       ),
+
     );
   }
 
@@ -142,14 +143,9 @@ class _NotePageState extends State<NotePage> {
   }
 
   Container getNoteTitleContainer() {
-    final Size screenSize = MediaQuery
-        .of(context)
-        .size;
 
     return Container(
-      padding: EdgeInsets.all(16.0),
-      margin: EdgeInsets.only(left: 24.0, right: 24.0),
-      width: screenSize.width,
+      padding: EdgeInsets.all(24.0),
       child: _noteTitleWidget,
     );
   }
@@ -162,10 +158,7 @@ class _NotePageState extends State<NotePage> {
 
     return Text(
       _note.title,
-      style: Theme
-          .of(context)
-          .textTheme
-          .title,
+      style: Theme.of(context).textTheme.title,
     );
   }
 
@@ -200,14 +193,10 @@ class _NotePageState extends State<NotePage> {
   }
 
   Container getNoteContentContainer() {
-    final Size screenSize = MediaQuery
-        .of(context)
-        .size;
 
     return Container(
-      padding: EdgeInsets.only(left: 24.0, right: 24.0),
-      margin: EdgeInsets.only(left: 24.0, right: 24.0),
-      width: screenSize.width,
+      alignment: Alignment.topLeft,
+      padding: EdgeInsets.all(24.0),
       child: _noteContentWidget,
     );
   }
@@ -216,18 +205,16 @@ class _NotePageState extends State<NotePage> {
     if (_isUpdateContent == true)
       return TextField(
         controller: _noteContentInputController,
-        maxLines: 6,
+        maxLines: 24,
       );
 
     return Linkify(
       onOpen: (link) {
         lunchLink(link);
       },
+      textAlign: TextAlign.start,
       text: _note.content,
-      style: Theme
-          .of(context)
-          .textTheme
-          .body1,
+      style: Theme.of(context).textTheme.body1,
     );
   }
 
@@ -248,28 +235,17 @@ class _NotePageState extends State<NotePage> {
   }
 
   getNoteImage() {
-
-    return Flexible(
-        child:
-        Container(
-      margin: EdgeInsets.all( 24.0),
+        return Container(
+      margin: EdgeInsets.all(24.0),
       child: null == _noteImage ? Container() : _noteImage,
-    ));
+    );
   }
-
 
   void loadImageFromPreferences() {
     ImageUtility.getImageFromPreferences(_note.id.toString()).then((img) {
-
       setState(() {
-        if (null != img)
-        _noteImage = ImageUtility.imageFromBase64String(img);
-
+        if (null != img) _noteImage = ImageUtility.imageFromBase64String(img);
       });
-
     });
-
   }
 }
-
-

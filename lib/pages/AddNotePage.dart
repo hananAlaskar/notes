@@ -116,6 +116,7 @@ class _AddNotePageState extends State<AddNotePage> {
   void clearAddNoteInput() {
     addNoteInputController.text = '';
     addNoteTitleInputController.text = '';
+    _imageURI = null;
   }
 
   void savePicture(int noteId, Note note) {
