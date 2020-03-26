@@ -27,6 +27,8 @@ MIT
 
 ## Some Screenshots
 
-![Add Note](screenshot/add_note.gif = 50x50) ![View Note](screenshot/scrollable_note.gif) ![View With Link](screenshot/clickable_link.gif)
-![View Note With Image](screenshot/note_with_image.gif)![Edit Note](screenshot/edit_note.gif)![Note Category](screenshot/note_category.gif)
-![Note Dark Mode](screenshot/dark_mode.gif)
+| Add Note | View Note | View With Link | View Note With Image |Edit Note | Note Category | Note Dark Mode | 
+| ------ | ------ | ------ | ------ |------ | ------ | ------ | 
+|![](screenshot/add_note.gif)|![](screenshot/scrollable_note.gif)|![](screenshot/clickable_link.gif)|![](screenshot/note_with_image.gif)|![](screenshot/edit_note.gif)|![](screenshot/note_category.gif)|![](screenshot/dark_mode.gif)|
+
+
