@@ -1,5 +1,5 @@
 class DateUtility {
-  
+
   static final weekDay = {
     1: 'Mon',
     2: 'Tu',
