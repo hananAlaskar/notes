@@ -52,7 +52,6 @@ flutter:
 
   assets:
     - data_rep/img/note.jpg
-    - data_rep/img/download.jpeg
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg

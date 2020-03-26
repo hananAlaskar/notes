@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:notes_app/model/NoteCategory.dart';
 import 'package:notes_app/pages/CategoryDropdownButton.dart';
 import 'package:notes_app/pages/NotePage.dart';
+import 'package:notes_app/utility/DateUtility.dart';
 import 'package:notes_app/utility/ui_utility/UiUtility.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:notes_app/model/Note.dart';
@@ -180,12 +181,12 @@ class _NoteListPageState extends State<NoteListPage> {
   }
 
   Text getDate(index) {
-    return Text(getDateString(noteList[index].date));
+    return Text(DateUtility.getDate(noteList[index].date),
+        style: Theme.of(context).textTheme.body2,
+    );
   }
 
-  String getDateString(String strDate) {
-    return strDate.substring(0, strDate.indexOf(' '));
-  }
+
 
   void updateListView(categoryNumber) {
     final Future<Database> dbFuture = helper.initializeDatabase();

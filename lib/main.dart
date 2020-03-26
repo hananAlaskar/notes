@@ -10,7 +10,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'My Note',
       theme: MyTheme.getLightTheme(),
       darkTheme: MyTheme.getDarkTheme(),
       home: MyHome(),
