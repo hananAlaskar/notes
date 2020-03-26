@@ -31,6 +31,10 @@ dev_dependencies:
   path_provider: any
   flutter_linkify: ^3.1.0
   url_launcher: ^5.4.2
+  shared_preferences:
+  image_picker: ^0.6.3+4
+
+
 
 
 
@@ -48,6 +52,7 @@ flutter:
 
   assets:
     - data_rep/img/note.jpg
+    - data_rep/img/download.jpeg
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg

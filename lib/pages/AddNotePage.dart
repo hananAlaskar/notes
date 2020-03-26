@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:notes_app/model/Note.dart';
 import 'package:notes_app/model/NoteCategory.dart';
 import 'package:notes_app/model/database_helper.dart';
 import 'package:notes_app/pages/CategoryDropdownButton.dart';
 import 'package:notes_app/pages/NotePage.dart';
+import 'dart:async';
+import 'package:notes_app/uitility/ImageUtility.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddNotePage extends StatefulWidget {
   AddNotePage({Key key}) : super(key: key);
@@ -21,10 +26,11 @@ class _AddNotePageState extends State<AddNotePage> {
 
   NoteCategory _selectedNoteCategory;
 
+  File _imageURI;
+
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -46,6 +52,8 @@ class _AddNotePageState extends State<AddNotePage> {
               getAddNoteTitleInputTextContainer(),
               getAddNoteContainInputTextContainer(),
               getCategoryRow(),
+              addPictureButtonContainer(),
+              getSelectedImage(),
               addNoteButtonContainer(),
             ],
           ),
@@ -59,9 +67,7 @@ class _AddNotePageState extends State<AddNotePage> {
   }
 
   Container getAddNoteContainInputTextContainer() {
-
     return getAddNoteInputTextContainer(getNoteInputTextField());
-
   }
 
   Container getAddNoteInputTextContainer(inputTextField) {
@@ -75,7 +81,6 @@ class _AddNotePageState extends State<AddNotePage> {
       child: inputTextField,
     );
   }
-
 
   TextField getNoteTitleInputTextField() {
     return TextField(
@@ -95,14 +100,10 @@ class _AddNotePageState extends State<AddNotePage> {
     );
   }
 
-
   TextField getInputTextField(
       maxLines, fontSize, fontHeight, hint, inputController) {
     return TextField(
       maxLines: maxLines,
-      style: new TextStyle(
-
-          fontSize: fontSize, height: fontHeight, color: Colors.black),
       decoration: getInputDecoration(hint),
       controller: inputController,
     );
@@ -110,6 +111,106 @@ class _AddNotePageState extends State<AddNotePage> {
 
   InputDecoration getInputDecoration(hint) {
     return InputDecoration(border: InputBorder.none, hintText: hint);
+  }
+
+  void clearAddNoteInput() {
+    addNoteInputController.text = '';
+    addNoteTitleInputController.text = '';
+  }
+
+  void savePicture(int noteId, Note note) {
+    if (_imageURI != null) {
+      ImageUtility.saveImageToPreferences(noteId.toString(),
+          ImageUtility.base64String(_imageURI.readAsBytesSync()));
+    }
+
+    navigateToNote(note);
+  }
+
+  void navigateToNote(Note note) async {
+    await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return NotePage(note);
+    }));
+  }
+
+  getCategoryRow() {
+    return Container(
+        padding: EdgeInsets.all(16.0),
+        child: Row(
+          children: <Widget>[
+            getCategoryDropdownButton(),
+            getClearCategoryButton(),
+          ],
+        ));
+  }
+
+  getCategoryDropdownButton() {
+    return Container(
+        alignment: Alignment.topCenter,
+        child: DropdownButton<NoteCategory>(
+            hint: Text("Select Category"),
+            value: _selectedNoteCategory,
+            onChanged: (NoteCategory noteCategory) {
+              categoryDropdownOnChanged(noteCategory);
+            },
+            items: CategoryDropdownButton.getCategoryDropdownButtonItems(
+                context, 140)));
+  }
+
+  categoryDropdownOnChanged(noteCategory) {
+    setState(() {
+      _selectedNoteCategory = noteCategory;
+    });
+  }
+
+  getClearCategoryButton() {
+    return IconButton(
+      icon: Icon(Icons.clear),
+      onPressed: () {
+        setState(() {
+          _selectedNoteCategory = null;
+        });
+      },
+    );
+  }
+
+  Container addPictureButtonContainer() {
+    final Size screenSize = MediaQuery.of(context).size;
+
+    return Container(
+      width: screenSize.width,
+      margin: EdgeInsets.all(16.0),
+      child: getAddPictureRaisedButton(),
+    );
+  }
+
+  RaisedButton getAddPictureRaisedButton() {
+    return RaisedButton(
+      child: getAddPictureText(),
+      onPressed: () => getImageFromGallery(),
+    );
+  }
+
+  Text getAddPictureText() {
+    return Text(
+      'Add Picture',
+      style: Theme.of(context).textTheme.button,
+    );
+  }
+
+  Future getImageFromGallery() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _imageURI = image;
+    });
+  }
+
+  Widget getSelectedImage() {
+    if (_imageURI == null)
+      return Text('No image selected.');
+    else
+      return Image.file(_imageURI, width: 120, height: 100);
   }
 
   Container addNoteButtonContainer() {
@@ -133,14 +234,20 @@ class _AddNotePageState extends State<AddNotePage> {
     return Text(
       'Add',
       style: Theme.of(context).textTheme.button,
-
     );
   }
 
   void _addNote() async {
     Note note = createNote();
-    await helper.insertNote(note);
-    navigateToNote(note);
+
+    int result = await helper.insertNote(note);
+
+    if (result != 0) {
+      int noteId = await helper.getNoteId(note);
+
+      if (noteId != 0) savePicture(noteId, note);
+    }
+
     clearAddNoteInput();
   }
 
@@ -151,60 +258,5 @@ class _AddNotePageState extends State<AddNotePage> {
 
     return new Note(
         addNoteTitleInputController.text, addNoteInputController.text, -1);
-  }
-
-  void clearAddNoteInput() {
-    addNoteInputController.text = '';
-    addNoteTitleInputController.text = '';
-  }
-
-  void navigateToNote(Note note) async {
-    await Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return NotePage(note);
-    }));
-  }
-
-  getCategoryRow() {
-    return Container(
-        padding: EdgeInsets.all(16.0),
-        child: Row(
-          children: <Widget>[
-            getCategoryDropdownButton(),
-            getClearCategoryButton(),
-          ],
-        ));
-  }
-
-
-  getCategoryDropdownButton() {
-
-    return Container(
-        alignment: Alignment.topCenter,
-        child: DropdownButton<NoteCategory>(
-          hint: Text("Select Category"),
-          value: _selectedNoteCategory,
-          onChanged:(NoteCategory noteCategory){categoryDropdownOnChanged(noteCategory);},
-            items:CategoryDropdownButton.getCategoryDropdownButtonItems(context, 140))
-    );
-  }
-
-  categoryDropdownOnChanged(noteCategory){
-
-      setState(() {
-        _selectedNoteCategory = noteCategory;
-      });
-
-  }
-
-
-  getClearCategoryButton() {
-    return IconButton(
-      icon: Icon(Icons.clear),
-      onPressed: () {
-        setState(() {
-          _selectedNoteCategory = null;
-        });
-      },
-    );
   }
 }

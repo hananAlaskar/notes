@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:notes_app/uitility/ImageUtility.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:notes_app/model/Note.dart';
 import 'package:notes_app/model/NoteCategory.dart';
@@ -16,7 +17,8 @@ class NotePage extends StatefulWidget {
 class _NotePageState extends State<NotePage> {
   DatabaseHelper helper = DatabaseHelper();
 
-  Note note;
+  Note _note;
+  Image _noteImage;
   bool _isUpdateTitle;
   bool _isUpdateContent;
 
@@ -27,17 +29,18 @@ class _NotePageState extends State<NotePage> {
   final _noteContentInputController = TextEditingController();
 
   _NotePageState(Note note) {
-    this.note = note;
-
+    this._note = note;
     _isUpdateTitle = false;
     _isUpdateContent = false;
+
+    loadImageFromPreferences();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(note.title),
+          title: Text(_note.title),
         ),
         body: getNoteBody());
   }
@@ -58,8 +61,12 @@ class _NotePageState extends State<NotePage> {
 
   BoxDecoration myBoxDecoration() {
     return BoxDecoration(
-      color: Theme.of(context).cardColor,
-      border: Border.all(color: Theme.of(context).cardColor, width: 5.0),
+      color: Theme
+          .of(context)
+          .cardColor,
+      border: Border.all(color: Theme
+          .of(context)
+          .cardColor, width: 5.0),
       borderRadius: BorderRadius.all(Radius.circular(10.0)),
     );
   }
@@ -69,7 +76,8 @@ class _NotePageState extends State<NotePage> {
       children: <Widget>[
         getRow(),
         getNoteTitleGestureDetector(),
-        getNoteContentGestureDetector()
+        getNoteContentGestureDetector(),
+        getNoteImage()
       ],
     );
   }
@@ -85,11 +93,13 @@ class _NotePageState extends State<NotePage> {
   }
 
   getNoteCategory() {
-    return NoteCategory.getCategoryIcon(note.category);
+    return NoteCategory.getCategoryIcon(_note.category);
   }
 
   Container getNoteDateContainer() {
-    final Size screenSize = MediaQuery.of(context).size;
+    final Size screenSize = MediaQuery
+        .of(context)
+        .size;
 
     return Container(
       padding: EdgeInsets.all(8.0),
@@ -122,17 +132,19 @@ class _NotePageState extends State<NotePage> {
 
   startUpdatingNoteTitle() {
     _isUpdateTitle = true;
-    _noteTitleInputController.text = note.title;
+    _noteTitleInputController.text = _note.title;
   }
 
   finisUpdatingNoteTitle() {
     _isUpdateTitle = false;
-    note.title = _noteTitleInputController.text;
-    updateNote(note);
+    _note.title = _noteTitleInputController.text;
+    updateNote(_note);
   }
 
   Container getNoteTitleContainer() {
-    final Size screenSize = MediaQuery.of(context).size;
+    final Size screenSize = MediaQuery
+        .of(context)
+        .size;
 
     return Container(
       padding: EdgeInsets.all(16.0),
@@ -149,8 +161,11 @@ class _NotePageState extends State<NotePage> {
       );
 
     return Text(
-      note.title,
-      style: Theme.of(context).textTheme.title,
+      _note.title,
+      style: Theme
+          .of(context)
+          .textTheme
+          .title,
     );
   }
 
@@ -175,17 +190,19 @@ class _NotePageState extends State<NotePage> {
 
   startUpdatingNoteContent() {
     _isUpdateContent = true;
-    _noteContentInputController.text = note.content;
+    _noteContentInputController.text = _note.content;
   }
 
   finisUpdatingNoteContent() {
     _isUpdateContent = false;
-    note.content = _noteContentInputController.text;
-    updateNote(note);
+    _note.content = _noteContentInputController.text;
+    updateNote(_note);
   }
 
   Container getNoteContentContainer() {
-    final Size screenSize = MediaQuery.of(context).size;
+    final Size screenSize = MediaQuery
+        .of(context)
+        .size;
 
     return Container(
       padding: EdgeInsets.only(left: 24.0, right: 24.0),
@@ -206,8 +223,11 @@ class _NotePageState extends State<NotePage> {
       onOpen: (link) {
         lunchLink(link);
       },
-      text: note.content,
-      style: Theme.of(context).textTheme.body1,
+      text: _note.content,
+      style: Theme
+          .of(context)
+          .textTheme
+          .body1,
     );
   }
 
@@ -219,12 +239,37 @@ class _NotePageState extends State<NotePage> {
     }
   }
 
-
   String getDate() {
-    return note.date.substring(0, note.date.indexOf(' '));
+    return _note.date.substring(0, _note.date.indexOf(' '));
   }
 
   void updateNote(Note note) async {
     await helper.updateNote(note);
   }
+
+  getNoteImage() {
+
+    return Flexible(
+        child:
+        Container(
+      margin: EdgeInsets.all( 24.0),
+      child: null == _noteImage ? Container() : _noteImage,
+    ));
+  }
+
+
+  void loadImageFromPreferences() {
+    ImageUtility.getImageFromPreferences(_note.id.toString()).then((img) {
+
+      setState(() {
+        if (null != img)
+        _noteImage = ImageUtility.imageFromBase64String(img);
+
+      });
+
+    });
+
+  }
 }
+
+
