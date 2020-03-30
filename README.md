@@ -1,6 +1,6 @@
 # Notes App
 
-Notes App is a [Flutter](https://flutter.dev/) application that build for Flutter Challenge. The chanllenge mede by [mais alheraki.](https://github.com/pr-Mais)
+Notes App is a [Flutter](https://flutter.dev/) application that build for Flutter Challenge. The chanllenge mede by [mais alheraki](https://github.com/pr-Mais) and [Nawal Al-Hamwi](https://www.linkedin.com/in/nawal-al-hamwi/)
 
 # App functions
  - Creating a new note.
