@@ -7,10 +7,10 @@ Notes App is a [Flutter](https://flutter.dev/) application that build for Flutte
  - Editing existing notes.
  - Deleting existing notes.
 
-## Libaray
-The libaray the has been used to develop this app.
+## Library
+The library the has been used to develop this app.
 
-| Libaray | Link |
+| Library | Link |
 | ------ | ------ |
 | sqflite | https://pub.dev/packages/sqflite |
 | path_provider | https://pub.dev/packages/path_provider |
